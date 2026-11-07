@@ -147,7 +147,7 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden}
 .front .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .front .ph span{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--wine)}
-.front .cap{margin:6px 0 0;font-family:var(--hand);font-size:clamp(17px, 5vw, 21px);line-height:1.1;color:#3D1119;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.front .cap{margin:6px 0 0;font-family:var(--hand);font-size:clamp(16px, 4.6vw, 19px);line-height:1.05;color:#3D1119;text-align:center;overflow:hidden}
 .back{transform:rotateY(180deg);background-color:#FFF6F2;background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 25px, rgba(179,38,58,.12) 25px, rgba(179,38,58,.12) 26px);
   padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left}
 .back p{margin:0;font-family:var(--hand);font-size:clamp(17px, 5vw, 20px);line-height:25px;color:#3D1119;overflow:hidden}
@@ -175,6 +175,21 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
 .round{width:56px;height:56px;flex-shrink:0;border-radius:999px;border:2px solid var(--line);background:var(--paper);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 .round:hover{background:#F6E1DE}
 .round:disabled{opacity:.35;cursor:default}
+
+
+/* ---------- bouquet ---------- */
+.bq{position:relative;width:min(300px,100%);aspect-ratio:300/330;margin-top:18px;flex-shrink:0}
+.bq-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.fl{position:absolute;width:30.7%;aspect-ratio:1;transform:translate(-50%,-50%);padding:0;border:none;background:transparent;cursor:pointer;border-radius:50%}
+.fl svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.fl .bloom{transform:scale(.15) rotate(-70deg);opacity:0;transition:transform .9s cubic-bezier(.3,1.5,.5,1), opacity .3s}
+.fl.open .bloom{transform:none;opacity:1}
+.fl .bud{transition:transform .3s, opacity .3s;animation:budpulse 1.8s ease-in-out infinite}
+.fl:nth-of-type(2n) .bud{animation-delay:-.6s}
+.fl:nth-of-type(3n) .bud{animation-delay:-1.1s}
+.fl.open .bud{opacity:0;transform:scale(.4);animation:none}
+@keyframes budpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+.bq-msg{margin:6px 0 0;min-height:36px;font-family:var(--hand);font-size:24px;white-space:nowrap;color:var(--rose-text);text-align:center}
 
 /* ---------- 5. cake ---------- */
 .cake{position:relative;width:280px;height:280px;margin-top:22px;flex-shrink:0}
@@ -233,7 +248,7 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
     <button class="iconbtn" id="backBtn" aria-label="Go back" hidden>
       <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="#8E1B2E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <div class="progress" id="progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="progress" id="progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <button class="iconbtn" id="musicBtn" aria-label="Play music" hidden>
       <svg id="musicIcon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="#8E1B2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="none" stroke="#8E1B2E" stroke-width="2"/><circle cx="17.5" cy="16" r="2.5" fill="none" stroke="#8E1B2E" stroke-width="2"/></svg>
     </button>
@@ -358,6 +373,38 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
     </div>
   </section>
 
+  <!-- 4b. BOUQUET -->
+  <section class="scene" id="s-bouquet" aria-label="A bouquet for you">
+    <div class="center" style="width:100%">
+      <p class="kicker">one more thing</p>
+      <h1 style="margin-top:4px">For my<br>sunflower</h1>
+      <p class="sub" id="bqSub" style="margin-top:8px">Tap each bud and watch it bloom.</p>
+    </div>
+    <div class="bq" id="bq">
+      <svg class="bq-svg" viewBox="0 0 300 330" aria-hidden="true">
+        <path d="M30 44 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3z" fill="#D9475F"/>
+        <path d="M268 30 l2.5 7 7 2.5 -7 2.5 -2.5 7 -2.5 -7 -7 -2.5 7 -2.5z" fill="#F7B731" stroke="#4A1520" stroke-width="1"/>
+        <path d="M262 232 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3z" fill="#D9475F"/>
+        <path d="M38 244 l2.5 7 7 2.5 -7 2.5 -2.5 7 -2.5 -7 -7 -2.5 7 -2.5z" fill="#F7B731" stroke="#4A1520" stroke-width="1"/>
+        <g stroke-linecap="round" fill="none">
+          <path d="M150 62 L150 222 M70 122 L150 222 M230 122 L150 222 M108 170 L150 222 M192 170 L150 222" stroke="#4A1520" stroke-width="9"/>
+          <path d="M150 62 L150 222 M70 122 L150 222 M230 122 L150 222 M108 170 L150 222 M192 170 L150 222" stroke="#6F9A4B" stroke-width="5"/>
+        </g>
+        <path d="M118 214 C 92 206, 74 188, 70 168 C 96 170, 114 186, 118 214Z" fill="#7DA05A" stroke="#4A1520" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M182 214 C 208 206, 226 188, 230 168 C 204 170, 186 186, 182 214Z" fill="#7DA05A" stroke="#4A1520" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M66 204 L234 204 L176 324 L124 324 Z" fill="#EBC4C1" stroke="#4A1520" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M66 204 L150 252 L234 204 L176 324 L124 324 Z" fill="#FBE6E2" stroke="#4A1520" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M150 262 C 128 246, 112 252, 114 266 C 116 280, 138 272, 150 262Z M150 262 C 172 246, 188 252, 186 266 C 184 280, 162 272, 150 262Z" fill="#B3263A" stroke="#4A1520" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="150" cy="263" r="7" fill="#8E1B2E" stroke="#4A1520" stroke-width="2"/>
+        <path d="M146 270 L136 298 M154 270 L166 298" stroke="#4A1520" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="bq-msg" id="bqMsg" aria-live="polite"></p>
+    <button class="btn" data-go="5" style="margin-top:auto;flex-shrink:0">One last thing
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="#FBF1EC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </section>
+
   <!-- 5. CAKE -->
   <section class="scene scroll" id="s-cake" aria-label="Make a wish">
     <div class="center" style="width:100%">
@@ -378,8 +425,8 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
     </div>
     <p class="cake-status" id="cakeStatus" aria-live="polite"></p>
     <div class="finale" id="finale">
-      <h2>Happy birthday,<br>Shristi.</h2>
-      <p class="msg">My Maya, my mutu. I hope this year is as soft and bright as you are. I love you, today and every day after.</p>
+      <h2>Happiest birthday,<br>my sunflower.</h2>
+      <p class="msg">My brightest star. I love you so so much, mutu, today and every day after.</p>
       <p class="sig" id="signoff"></p>
       <div class="final-photo">
         <div class="tape" aria-hidden="true"></div>
@@ -403,38 +450,38 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
 const CONFIG = {
   herName: 'Shristi',
   firstKiss: { y: 2023, m: 5, d: 26 },
-  signoff: '— yours, always',
+  signoff: '— forever yours',
   letter:
-`Mero Maya,
+`Happy birthday, mero mutu,
 
-Happy birthday, mutu.
+Kaha bata suru garum… thank you so much for coming into this universe. My life, my everything ❤️
 
-Ever since 26 May 2023, my favourite place in the world has been anywhere next to you. You make ordinary days feel like ones I want to remember, and hard days feel smaller just because you're in them.
+Hamro maya ko kura ta jati gare ni sakinna, but today, on your special day, I want to thank you for all the courage you carry. You have fought the toughest battles and never gave up, even on the worst days. You can't imagine how proud I am of you, Maya ❤️
 
-Thank you for your laugh, your patience, and for choosing me again and again. I don't say it enough, so here it is in writing, where you can come back to it whenever you want: I love you. So much.
+I'm so happy to see you trusting yourself so much more lately. All your hard work and patience will start showering onto you as blessings, mutu. I know mah timro laagi sahaj hunu bhanda ni kaile kai jhan afthyaro pardiyeko hola, tara thank you for choosing me, always ❤️
 
-Today is all about you, baby. I hope this year gives you everything you've been quietly wishing for, and I promise to be right there for all of it.
+I have imagined my entire life with you. May we get to celebrate all our special days together. Timi healthy rahanu, aafno best dinu harek thau ma, as always. I will try to be the soft and safe corner for you. May you get all the luck and love from the universe, everything you ever wanted. Can't wait to feel the cozy winter in your arms, cutie. I love you so so much, mutu ❤️🌻
 
-Forever yours.`,
+Happiest birthday, my sunflower 🌻
+My brightest star ⭐`,
   photos: [
-    // src: 'photos/01.jpg' once uploaded. cap = short label on the front, story = the note on the back
-    { src: null, cap: 'where it all began', story: 'The story behind this one goes here.' },
-    { src: null, cap: 'our first trip',     story: 'A tiny detail only we would remember.' },
-    { src: null, cap: 'that night',         story: 'What made us laugh so hard.' },
-    { src: null, cap: 'you, being you',     story: 'Why this is my favourite photo of you.' },
-    { src: null, cap: 'us, again',          story: 'Another little memory.' },
-    { src: null, cap: 'my favourite smile', story: 'Another little memory.' }
+    { src: 'photos/01.jpg', cap: 'NPL time',           story: 'Cold stadium night, loud crowd, and you right next to me.' },
+    { src: 'photos/02.jpg', cap: 'Chuppppa 💋',   story: 'A quiet garden and one little chuppa.' },
+    { src: 'photos/03.jpg', cap: 'Hamro lovely date',  story: 'Candlelight, roses, and you smiling at me.' },
+    { src: 'photos/04.jpg', cap: 'Mero Don 😎',   story: 'Hood up, shades on. Nobody messes with my Don.' },
+    { src: 'photos/05.jpg', cap: 'Mero posy Kanchi',   story: 'A flower in your hair and the prettiest smile.' },
+    { src: 'photos/06.jpg', cap: 'My MJ 🕷️', story: 'Hiding behind a Spider-verse, and I still see you.' },
+    { src: 'photos/07.jpg', cap: 'Anban days',         story: 'Old streets, tika on our foreheads, a whole crowd that didn\u2019t matter.' },
+    { src: 'photos/08.jpg', cap: 'Conspiracy date',    story: 'Plotting a very cute conspiracy, one photo at a time.' }
   ],
-  finalPhoto: { src: null, cap: 'my whole heart' },
+  finalPhoto: { src: 'photos/05.jpg', cap: 'my sunflower' },
   reasons: [
-    'The way you laugh at your own jokes before you even reach the punchline.',
-    'How you remember the tiny things I said once, months ago.',
-    'You make even the most boring errand feel like a little date.',
-    'The way you say my name when you’re sleepy.',
-    'How you care for everyone around you, even when you’re tired.',
-    'You are my calm on loud days.',
-    'Your hugs fix things that words can’t.',
-    'And every reason I haven’t found the words for yet.'
+    'Timro calmness and patience.',
+    'For every fight you\u2019ve won with yourself.',
+    'For being the hardest working woman I know.',
+    'Mah eti rough huda ni, malai sadhai maya garne mutu.',
+    'My stardust buddy. Maybe we came from the same stardust, that\u2019s why we feel the same for each other.',
+    'And every reason I haven\u2019t found the words for yet.'
   ],
   candles: 5,
   music: null // e.g. 'song.mp3'
@@ -444,7 +491,7 @@ Forever yours.`,
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const HEART = 'M12 20s-7-4.3-8.9-8.6C1.7 8.1 3.7 5 6.9 5c1.9 0 3.4 1 5.1 2.8C13.7 6 15.2 5 17.1 5c3.2 0 5.2 3.1 3.8 6.4C19 15.7 12 20 12 20z';
-const scenes = ['s-lock', 's-letter', 's-mem', 's-reasons', 's-cake'].map(id => document.getElementById(id));
+const scenes = ['s-lock', 's-letter', 's-mem', 's-reasons', 's-bouquet', 's-cake'].map(id => document.getElementById(id));
 let current = 0;
 
 function go(i) {
@@ -457,7 +504,8 @@ function go(i) {
   $$('#progress span').forEach((d, k) => d.classList.toggle('on', k <= i));
   $('#backBtn').hidden = i === 0;
   if (i === 1) startLetterIfOpen();
-  if (i === 4) resetCake();
+  if (i === 5) resetCake();
+  if (i === 4) resetBouquet();
   const h = scenes[i].querySelector('h1');
   if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
 }
@@ -519,23 +567,23 @@ $('#lockForm').addEventListener('submit', e => {
 
 /* ---------- 2. letter ---------- */
 const today = new Date();
-$('#letterDate').textContent = [today.getDate(), today.getMonth() + 1, today.getFullYear()].map(n => String(n).padStart(2, '0')).join(' · ');
+$('#letterDate').textContent = '08 · 11 · 2026';
+const LETTER = Array.from(CONFIG.letter);
 let typeTimer = null, typedI = 0, letterOpened = false;
 const typedEl = $('#typed');
 function renderTyped(done) {
-  typedEl.textContent = CONFIG.letter.slice(0, typedI);
+  typedEl.textContent = LETTER.slice(0, typedI).join('');
   if (!done) { const c = document.createElement('span'); c.className = 'caret'; typedEl.appendChild(c); }
 }
 function typeLetter() {
   clearInterval(typeTimer);
   typeTimer = setInterval(() => {
-    const ch = CONFIG.letter[typedI];
-    typedI += (ch === '\n') ? 1 : 1;
-    if (typedI >= CONFIG.letter.length) { typedI = CONFIG.letter.length; clearInterval(typeTimer); renderTyped(true); $('#skipBtn').style.display = 'none'; return; }
+    typedI += 1;
+    if (typedI >= LETTER.length) { typedI = LETTER.length; clearInterval(typeTimer); renderTyped(true); $('#skipBtn').style.display = 'none'; return; }
     renderTyped(false);
     const paper = $('#paper');
     if (paper.scrollHeight - paper.scrollTop - paper.clientHeight < 80) paper.scrollTop = paper.scrollHeight;
-  }, 32);
+  }, 22);
 }
 function startLetterIfOpen() { /* letter keeps its state when revisiting */ }
 $('#sealBtn').addEventListener('click', () => {
@@ -545,7 +593,7 @@ $('#sealBtn').addEventListener('click', () => {
   setTimeout(typeLetter, 900);
 });
 $('#skipBtn').addEventListener('click', () => {
-  clearInterval(typeTimer); typedI = CONFIG.letter.length; renderTyped(true); $('#skipBtn').style.display = 'none';
+  clearInterval(typeTimer); typedI = LETTER.length; renderTyped(true); $('#skipBtn').style.display = 'none';
 });
 
 /* ---------- 3. memories ---------- */
@@ -600,6 +648,44 @@ function showReason(dir) {
 $('#nextCard').addEventListener('click', () => { if (ri < CONFIG.reasons.length - 1) { ri++; showReason(1); } });
 $('#prevCard').addEventListener('click', () => { if (ri > 0) { ri--; showReason(-1); } });
 showReason(0);
+
+/* ---------- bouquet ---------- */
+const FLOWERS = [[150,62],[70,122],[230,122],[108,170],[192,170]];
+function petals(n, off, cy, rx, ry, fill) {
+  let o = '';
+  for (let k = 0; k < n; k++) o += '<ellipse cx="0" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" transform="rotate(' + (off + k * 360 / n) + ')" fill="' + fill + '" stroke="#4A1520" stroke-width="1.4"/>';
+  return o;
+}
+function seeds() {
+  let o = '';
+  for (let k = 1; k < 26; k++) { const a = k * 137.5 * Math.PI / 180, r = Math.sqrt(k) * 3.1; o += '<circle cx="' + (r * Math.cos(a)).toFixed(1) + '" cy="' + (r * Math.sin(a)).toFixed(1) + '" r="1.3" fill="#3D1B0F"/>'; }
+  return o;
+}
+const BLOOM_SVG = '<svg class="bloom" viewBox="-50 -50 100 100" aria-hidden="true">' + petals(12, 0, -30, 8.5, 17, '#F7B731') + petals(12, 15, -25, 7, 14, '#FFD25A') + '<circle r="16" fill="#6B3A1E" stroke="#4A1520" stroke-width="2"/>' + seeds() + '</svg>';
+const BUD_SVG = '<svg class="bud" viewBox="-50 -50 100 100" aria-hidden="true">' + petals(6, 0, -15, 5, 9, '#F7B731') + '<circle r="15" fill="#7DA05A" stroke="#4A1520" stroke-width="2"/><path d="M-7 -4 Q0 -12 7 -4" fill="none" stroke="#4A1520" stroke-width="1.5" stroke-linecap="round"/></svg>';
+let bloomed = 0;
+function resetBouquet() {
+  const bq = $('#bq');
+  $$('.fl', bq).forEach(f => f.remove());
+  bloomed = 0; $('#bqMsg').textContent = ''; $('#bqSub').textContent = 'Tap each bud and watch it bloom.';
+  FLOWERS.forEach(([x, y], k) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'fl'; b.setAttribute('aria-label', 'Make flower ' + (k + 1) + ' bloom');
+    b.style.left = (x / 300 * 100) + '%'; b.style.top = (y / 330 * 100) + '%';
+    b.innerHTML = BLOOM_SVG + BUD_SVG;
+    b.addEventListener('click', () => {
+      if (b.classList.contains('open')) return;
+      b.classList.add('open'); b.setAttribute('aria-label', 'Flower ' + (k + 1) + ' in bloom');
+      bloomed++;
+      if (bloomed === FLOWERS.length) {
+        $('#bqSub').textContent = 'There. A bouquet that never wilts.';
+        const m = $('#bqMsg'); m.textContent = 'Happy birthday, my sunflower \u{1F33B}'; m.classList.remove('pop'); void m.offsetWidth; m.classList.add('pop');
+      }
+    });
+    bq.appendChild(b);
+  });
+}
+resetBouquet();
 
 /* ---------- 5. cake ---------- */
 const cake = $('#cake');
