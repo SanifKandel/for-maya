@@ -177,11 +177,16 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
 .round:disabled{opacity:.35;cursor:default}
 
 
+
+.how{display:inline-flex;align-items:center;gap:8px;margin:14px auto 0;white-space:nowrap;padding:8px 18px;border-radius:999px;background:#FFF9F7;border:2px dashed var(--line);font-family:var(--hand);font-size:23px;line-height:1.1;color:var(--ink)}
+.how b{color:var(--wine);font-family:var(--hand);font-size:25px}
+.toast{position:absolute;left:20px;right:20px;bottom:calc(104px + env(safe-area-inset-bottom));z-index:40;background:#4A1520;color:#FBF1EC;padding:14px 18px;border-radius:18px;text-align:center;font-family:var(--hand);font-size:23px;line-height:1.2;box-shadow:0 12px 28px rgba(74,21,32,.3);opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .3s, transform .3s}
+.toast.show{opacity:1;transform:none}
 /* ---------- bouquet ---------- */
 .bq{position:relative;width:min(300px,100%);aspect-ratio:300/330;margin-top:18px;flex-shrink:0}
 .bq-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.fl{position:absolute;width:30.7%;aspect-ratio:1;transform:translate(-50%,-50%);padding:0;border:none;background:transparent;cursor:pointer;border-radius:50%}
-.fl svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.fl{position:absolute;width:26.7%;aspect-ratio:1;transform:translate(-50%,-50%);padding:0;border:none;background:transparent;cursor:pointer;border-radius:50%}
+.fl svg{position:absolute;inset:-8%;width:116%;height:116%;overflow:visible;pointer-events:none}
 .fl .bloom{transform:scale(.15) rotate(-70deg);opacity:0;transition:transform .9s cubic-bezier(.3,1.5,.5,1), opacity .3s}
 .fl.open .bloom{transform:none;opacity:1}
 .fl .bud{transition:transform .3s, opacity .3s;animation:budpulse 1.8s ease-in-out infinite}
@@ -213,8 +218,8 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
 .finale h2{font-size:clamp(32px, 9.5vw, 40px);line-height:1.08;color:var(--wine)}
 .finale .msg{margin:14px auto 0;max-width:300px;font-size:16px;line-height:1.55;color:#5A2A32}
 .finale .sig{margin:10px 0 0;font-family:var(--hand);font-size:25px}
-.final-photo{position:relative;width:190px;background:#fff;padding:10px 10px 12px;margin:26px auto 0;transform:rotate(3deg);box-shadow:0 12px 26px rgba(74,21,32,.18)}
-.final-photo .ph{width:100%;aspect-ratio:1/1;background-color:#F4D6D4;background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.55) 0 8px, transparent 8px 16px);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.final-photo{position:relative;width:215px;background:#fff;padding:10px 10px 12px;margin:26px auto 0;transform:rotate(3deg);box-shadow:0 12px 26px rgba(74,21,32,.18)}
+.final-photo .ph{width:100%;aspect-ratio:3/4;background-color:#F4D6D4;background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.55) 0 8px, transparent 8px 16px);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .final-photo .ph img{width:100%;height:100%;object-fit:cover}
 .final-photo .ph span{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--wine)}
 .final-photo .tape{left:50%;top:-12px;width:80px;height:24px;margin-left:-40px;transform:rotate(-6deg)}
@@ -378,7 +383,8 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
     <div class="center" style="width:100%">
       <p class="kicker">one more thing</p>
       <h1 style="margin-top:4px">For my<br>sunflower</h1>
-      <p class="sub" id="bqSub" style="margin-top:8px">Tap each bud and watch it bloom.</p>
+      <p class="sub" id="bqSub" style="margin-top:8px">Wake up your bouquet, bud by bud.</p>
+      <div class="how" id="bqHow">👆 Tap each bud · <b id="bqN">0</b>/5 bloomed</div>
     </div>
     <div class="bq" id="bq">
       <svg class="bq-svg" viewBox="0 0 300 330" aria-hidden="true">
@@ -410,7 +416,8 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
     <div class="center" style="width:100%">
       <p class="kicker">the last chapter</p>
       <h1 style="margin-top:4px">Make a wish</h1>
-      <p class="sub" id="cakeSub" style="margin-top:8px">Close your eyes, make a wish, then tap each candle.</p>
+      <p class="sub" id="cakeSub" style="margin-top:8px">Close your eyes, make a wish… then blow out every candle.</p>
+      <div class="how" id="cakeHow">👆 Tap each candle · <b id="cakeN">5</b> left</div>
     </div>
     <div class="cake" id="cake">
       <svg class="body" width="280" height="200" viewBox="0 0 280 200" aria-hidden="true">
@@ -440,6 +447,7 @@ document.getElementById('stage').addEventListener('scroll', e => { e.currentTarg
     </div>
   </section>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="rain" id="rain" aria-hidden="true"></div>
 </div>
 
@@ -465,22 +473,22 @@ I have imagined my entire life with you. May we get to celebrate all our special
 Happiest birthday, my sunflower 🌻
 My brightest star ⭐`,
   photos: [
-    { src: 'photos/01.jpg', cap: 'NPL time',           story: 'Cold stadium night, loud crowd, and you right next to me.' },
-    { src: 'photos/02.jpg', cap: 'Chuppppa 💋',   story: 'A quiet garden and one little chuppa.' },
-    { src: 'photos/03.jpg', cap: 'Hamro lovely date',  story: 'Candlelight, roses, and you smiling at me.' },
-    { src: 'photos/04.jpg', cap: 'Mero Don 😎',   story: 'Hood up, shades on. Nobody messes with my Don.' },
-    { src: 'photos/05.jpg', cap: 'Mero posy Kanchi',   story: 'A flower in your hair and the prettiest smile.' },
-    { src: 'photos/06.jpg', cap: 'My MJ 🕷️', story: 'Hiding behind a Spider-verse, and I still see you.' },
-    { src: 'photos/07.jpg', cap: 'Anban days',         story: 'Old streets, tika on our foreheads, a whole crowd that didn\u2019t matter.' },
-    { src: 'photos/08.jpg', cap: 'Conspiracy date',    story: 'Plotting a very cute conspiracy, one photo at a time.' }
+    { src: 'photos/01.jpg', cap: 'NPL time',           story: 'Yo pali Gorkhas vs Lumbini hola ta?' },
+    { src: 'photos/02.jpg', cap: 'Chuppppa 💋',   story: 'Matcha is our favouriteee' },
+    { src: 'photos/03.jpg', cap: 'Hamro lovely date',  story: 'Ohhh my gwaadddd, who is this sexyy' },
+    { src: 'photos/04.jpg', cap: 'Mero Don 😎',   story: 'Mero don babyy' },
+    { src: 'photos/05.jpg', cap: 'Mero posy Kanchi',   story: 'Purani Nostalgia hogayihh' },
+    { src: 'photos/06.jpg', cap: 'My MJ 🕷\ufe0f', story: 'Haami kunai universe ma Peter and MJ holam hai?' },
+    { src: 'photos/07.jpg', cap: 'Anban days',         story: 'Anban days ma ni kasari maya huncha haami bata siknu parcha' },
+    { src: 'photos/08.jpg', cap: 'Conspiracy date',    story: 'Still we don\u2019t know what happened that night in Palace.' }
   ],
-  finalPhoto: { src: 'photos/05.jpg', cap: 'my sunflower' },
+  finalPhoto: { src: 'photos/final.jpg', cap: 'my birthday girl' },
   reasons: [
     'Timro calmness and patience.',
     'For every fight you\u2019ve won with yourself.',
     'For being the hardest working woman I know.',
     'Mah eti rough huda ni, malai sadhai maya garne mutu.',
-    'My stardust buddy. Maybe we came from the same stardust, that\u2019s why we feel the same for each other.',
+    'My stardust buddy.',
     'And every reason I haven\u2019t found the words for yet.'
   ],
   candles: 5,
@@ -509,7 +517,34 @@ function go(i) {
   const h = scenes[i].querySelector('h1');
   if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
 }
-$$('[data-go]').forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
+let toastT = null;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3600);
+}
+const tries = {};
+function gate(target) {
+  if (target <= current) return null;
+  if (current === 1 && !(letterOpened && typedI >= LETTER.length))
+    return ['letter', 'Heyy, read my whole letter first, mutu \u{1F97A} It took me so long to write. (or tap \u201cshow all\u201d)'];
+  if (current === 2 && seen.size < CONFIG.photos.length) {
+    const left = CONFIG.photos.length - seen.size;
+    return ['mem', 'Wait wait! ' + left + (left === 1 ? ' photo is' : ' photos are') + ' still face-down. Each one has a little note for you \u{1F495}'];
+  }
+  if (current === 4 && bloomed < FLOWERS.length)
+    return ['bq', 'Not so fast, my sunflower \u{1F33B} Tap every bud and let them bloom first!'];
+  return null;
+}
+$$('[data-go]').forEach(b => b.addEventListener('click', () => {
+  const target = +b.dataset.go;
+  const g = gate(target);
+  if (g) {
+    tries[g[0]] = (tries[g[0]] || 0) + 1;
+    if (tries[g[0]] < 3) { toast(g[1]); return; }
+    toast('Okay okay\u2026 you can go this time \u{1F97A}\u{1F495}');
+  }
+  go(target);
+}));
 $('#backBtn').addEventListener('click', () => { if (current > 0) go(current - 1); });
 $$('#progress span')[0].classList.add('on');
 
@@ -667,7 +702,7 @@ let bloomed = 0;
 function resetBouquet() {
   const bq = $('#bq');
   $$('.fl', bq).forEach(f => f.remove());
-  bloomed = 0; $('#bqMsg').textContent = ''; $('#bqSub').textContent = 'Tap each bud and watch it bloom.';
+  bloomed = 0; $('#bqMsg').textContent = ''; $('#bqSub').textContent = 'Wake up your bouquet, bud by bud.'; $('#bqN').textContent = 0; $('#bqHow').style.display = 'inline-flex';
   FLOWERS.forEach(([x, y], k) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'fl'; b.setAttribute('aria-label', 'Make flower ' + (k + 1) + ' bloom');
@@ -676,8 +711,9 @@ function resetBouquet() {
     b.addEventListener('click', () => {
       if (b.classList.contains('open')) return;
       b.classList.add('open'); b.setAttribute('aria-label', 'Flower ' + (k + 1) + ' in bloom');
-      bloomed++;
+      bloomed++; $('#bqN').textContent = bloomed;
       if (bloomed === FLOWERS.length) {
+        $('#bqHow').style.display = 'none';
         $('#bqSub').textContent = 'There. A bouquet that never wilts.';
         const m = $('#bqMsg'); m.textContent = 'Happy birthday, my sunflower \u{1F33B}'; m.classList.remove('pop'); void m.offsetWidth; m.classList.add('pop');
       }
@@ -716,9 +752,10 @@ function updateCake() {
   if (candlesLeft > 0) {
     s.classList.remove('wished');
     $('#cakeStatus').textContent = candlesLeft + (candlesLeft === 1 ? ' candle' : ' candles') + ' to go';
-    $('#cakeSub').textContent = 'Close your eyes, make a wish, then tap each candle.';
+    $('#cakeSub').textContent = 'Close your eyes, make a wish… then blow out every candle.';
+    $('#cakeN').textContent = candlesLeft; $('#cakeHow').style.display = 'inline-flex';
   } else {
-    $('#cakeSub').textContent = 'Wish made. Don’t tell me what it was.';
+    $('#cakeSub').textContent = 'Wish made. Don’t tell me what it was.'; $('#cakeHow').style.display = 'none';
     setTimeout(() => { s.classList.add('wished'); rainHearts(); }, 500);
   }
 }
